@@ -1,0 +1,5 @@
+.vscode
+
+node_modules/
+
+scr/public/css
