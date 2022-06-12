@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const path = require('path');
 const methodOverride = require('method-override');
 
+const handlebarCustom = require('./helpers/handlebars');
+const sortMiddleware = require('./app/middleware/sortMiddleware');
 const route = require('./routes');
 const db = require('./config/db');
 
@@ -21,6 +23,9 @@ app.use(express.urlencoded({
     extended : true
 }));
 
+// middleware custom
+app.use(sortMiddleware);
+
 // override method express
 app.use(methodOverride('_method'));
 
@@ -32,7 +37,7 @@ app.engine('hbs', handlebars.engine(
     {
         defaultLayout: 'main',
         extname: '.hbs',
-        
+        helpers: handlebarCustom,
     }
 ));
 app.set('view engine', 'hbs');

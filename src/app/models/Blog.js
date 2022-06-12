@@ -27,4 +27,16 @@ BlogsSchema.plugin(mongooseDelete, {
 });
 BlogsSchema.plugin(AutoIncrement);
 
+// custom query helpers
+BlogsSchema.query.sortable = function (req) {
+
+    if (req.query.hasOwnProperty('_sort')) {
+        const isValidType = ['asc', 'desc'].includes(req.query.type);
+        this.sort({
+            [req.query.column] : isValidType ? req.query.type :'desc',
+        });
+    }
+    return this;
+};
+
 module.exports = mongoose.model('Blog', BlogsSchema);

@@ -1,0 +1,217 @@
+<form name="container-form" class="mt-4 container-form" method="POST" action="/blogs/handle-form-action-trash">
+    <div>
+      <h3>My Blog</h3>
+      <a href="/me/store/blogs">My Course </a>
+      
+
+      <div class="d-flex mt-4">
+        
+        <select class="custom-select mr-sm-2" id="select-option-checkbox" name="action"  required>
+          <option value="">-- Select option --</option>
+          <option value="restore">Restore</option>
+          <option value="forceDelete" data-toggle="modal" data-target="#delete-form-container-modal" >Force Delete</option>
+        </select>
+
+        <button class="btn btn-primary btn-submit-checkbox" disabled >Effect</button>
+      </div>
+   
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">
+                  <input  type="checkbox" value="" id="select-all-checkbox">
+                </th>
+                <th scope="col" class="th-col">
+                  ID
+                 {{{sortable '_id' _sort}}}
+                </th>
+                <th scope="col">
+                  Title
+                 {{{sortable 'title' _sort}}}
+                </th>
+                <th scope="col">
+                  published
+                 {{{sortable 'published' _sort}}}  
+                </th>
+                <th scope="col" >
+                  deleted_At
+                 {{{sortable 'deletedAt' _sort}}}
+                </th>
+                <th scope="col">
+                  Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each blogs}}
+            <tr>
+                <td>
+                  <div>
+                     <input id="checkbox-item" type="checkbox" name="blogIds[]" value="{{this._id}}">
+                  </div>
+                </td>
+                <td>{{this._id}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.published}}</td>
+                <td>{{this.deletedAt}}</td>
+                <td>
+                    <a href="" class="btn btn-link btn-restore" data-id="{{this._id}}">Restore</a>
+                    <a href="" class="btn btn-link" data-id="{{this._id}}"  data-toggle="modal" data-target="#delete-blog-modal">Force Delete</a>
+                </td>
+            </tr>
+
+            {{else}}
+              <tr>
+                  <td colspan="5" class="text-center">
+                      Garbage can null!!!
+                      <a href="/">Come back home!!!</a>
+                      <a href="/me/store/blogs">My Course</a>
+                  </td>
+              </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</form> 
+
+
+{{!-- modal delete blog --}}
+
+<div id="delete-blog-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete blog?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Your data will be permanently deleted!!!</p><br/>
+        <p>Are you sure???</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-blog" type="button" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{{!-- modal delete form container --}}
+<form id="delete-form-container-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete blog?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Your data will be permanently deleted!!!</p><br/>
+        <p>Are you sure???</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-blog" type="button" class="btn btn-danger">Delete</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+{{!-- form submit --}}
+<form  name="delete-blog-form" id="delete-blog-form" method="POST"></form>
+<form  name="restore-blog-form" id="restore-blog-form" method="POST"></form>
+
+{{!-- delete hidden modal --}}
+<script>
+  // event dom loaded
+document.addEventListener("DOMContentLoaded", function() {
+    var blogId;
+    var deleteForm = document.forms['delete-blog-form'];
+    var restoreForm = document.forms['restore-blog-form'];
+    var containerForm = $('form[name="container-form"]');
+
+    var btnDeleteBlog = $('#btn-delete-blog');
+    var btnSubmitEffect = $('.btn-submit-checkbox');
+    var btnRestore = $('.btn-restore');
+    
+    var optionEffect = $('#select-option-checkbox');
+    var checkboxAll = $('#select-all-checkbox');
+    var checkboxItem = $('input[name="blogIds[]"]');
+
+    // when click modal show delete 1 option item
+    $('#delete-blog-modal').on("show.bs.modal", function(e) {
+      var button = $(e.relatedTarget);
+      blogId = button.data('id');
+    });
+
+    // when clicked container form button deleted
+    $('#delete-form-container-modal').on("show.bs.modal", function(e) {
+          var button = $(e.relatedTarget);
+          blogId;
+    });
+
+    // when checkbox all clicked
+    checkboxAll.change(function() {
+      var isCheckedAll = $(this).prop('checked'); 
+      checkboxItem.prop('checked', isCheckedAll);
+      renderCheckAllSubmitBtn();
+    });
+   
+    // item blog checkbox 'check' change
+    checkboxItem.change(function() {
+      var isCheckedAll = checkboxItem.length === $('input[name="blogIds[]"]:checked').length;
+      checkboxAll.prop('checked', isCheckedAll);
+      renderCheckAllSubmitBtn();
+    });
+
+    // when form container submit
+    containerForm.on('submit', function(e) {
+      var isSubmitable = btnSubmitEffect.hasClass('disabled');
+      if (isSubmitable) {
+        e.preventDefault();
+      }
+    });
+
+    // when select option change 
+   // $('#select-option-checkbox').change(function() {
+   // var isSelectOption = $('#select-option-checkbox').val() === 'forceDelete';
+   //       if (isSelectOption){
+   //               $('#delete-form-container-modal').show(function(e) {
+   //             var button = $(e.relatedTarget);
+  //              blogId = button.data('id');
+   //       });
+   //       }
+    //})
+    
+    // when delete blog clicked
+    btnDeleteBlog.click(function() {
+       deleteForm.action = '/blogs/' + blogId + '/force?_method=DELETE';
+       deleteForm.submit();
+    });
+
+    // when form restore submit
+    btnRestore.click(function (e) {
+      e.preventDefault();
+      blogId = $(this).data('id');
+      restoreForm.action = '/blogs/' + blogId + '/restore?_method=PATCH';
+      restoreForm.submit();
+    })
+
+    // re-render when 1 item checked 'non-disabled' submit button
+    function renderCheckAllSubmitBtn() {
+      var checkedCount = $('input[name="blogIds[]"]:checked').length;
+      if (checkedCount > 0) {
+        btnSubmitEffect.attr('disabled', false);
+      } else {
+        btnSubmitEffect.attr('disabled', true);
+     
+      }
+    }
+});
+</script>

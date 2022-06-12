@@ -1,0 +1,15 @@
+html {
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box; }
+
+.container-main {
+  min-height: 550px; }
+
+.form-search {
+  margin-left: 450px; }
+
+.container-form {
+  min-height: 600px; }
+
+#select-option-checkbox {
+  width: 250px; }

@@ -1,0 +1,36 @@
+<div class="mt-4">
+    <h3>Edit Blog</h3>
+
+    <form method="POST" action="/blogs/{{blogs._id}}?_method=PUT">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{blogs.title}}">
+        </div>
+        <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" class="form-control" id="author" name="author" value="{{blogs.author}}">
+        </div>
+        <div class="form-group">
+            <label for="summary">Summary</label>
+            <input type="text" class="form-control" id="summary" name="summary" value="{{blogs.summary}}">
+        </div>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea name="content" id="content" class="form-control" cols="30" rows="10" >{{blogs.content}}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="published">published</label>
+             <select class="form-control" id="published" name="published">
+                 <option value="{{blogs.published}}">{{blogs.published}}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="category">Categories</label>
+            <select class="form-control" name="category" id="category">
+                <option value="{{blogs.category}}">{{blogs.category}}</option>
+            </select>
+        </div>
+        <a href="/me/store/blogs" class="btn btn-light">Back </a>
+        <button type="submit" class="btn btn-primary">Save </button>
+    </form>
+</div> 

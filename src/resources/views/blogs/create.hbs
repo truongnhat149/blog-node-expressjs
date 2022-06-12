@@ -1,0 +1,38 @@
+<div class="mt-4">
+    <h3>Create Blog</h3>
+
+    <form method="POST" action="/blogs/store">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title">
+        </div>
+        <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" class="form-control" id="author" name="author">
+        </div>
+        <div class="form-group">
+            <label for="summary">Summary</label>
+            <input type="text" class="form-control" id="summary" name="summary">
+        </div>
+        <div class="form-group">
+            <label for="content">Content</label>
+            <textarea name="content" id="content" class="form-control" cols="30" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="published">published</label>
+             <select class="form-control" id="published" name="published">
+                 <option value="">--Select option--</option>
+                 <option value="public">Public</option>
+                 <option value="private">Private</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="category">Categories</label>
+            <select class="form-control" name="category" id="category">
+                <option value="develop">Develop</option>
+            </select>
+        </div>
+        <a href="/me/store/blogs" class="btn btn-light">Back </a>
+        <button type="submit" class="btn btn-primary">Add +</button>
+    </form>
+</div> 
